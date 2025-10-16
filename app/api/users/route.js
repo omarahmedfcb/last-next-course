@@ -1,12 +1,12 @@
 import { connectToDatabase } from "@/lib/dbConnection";
-import { Todo } from "@/lib/models/todos";
+import { User } from "@/lib/models/users";
 import { NextResponse } from "next/server";
 
 connectToDatabase();
 export async function GET() {
   try {
-    const todos = await Todo.find();
-    return NextResponse.json({ todos }, { status: 200 });
+    const users = await User.find();
+    return NextResponse.json({ users }, { status: 200 });
   } catch (error) {
     console.error(error.message);
     return NextResponse.json({ message: error.message }, { status: 404 });
@@ -16,8 +16,8 @@ export async function GET() {
 export async function POST(request) {
   try {
     const body = await request.json();
-    const newTodo = await Todo.create(body);
-    return NextResponse.json(newTodo, { status: 201 });
+    const newUser = await User.create(body);
+    return NextResponse.json(newUser, { status: 201 });
   } catch (err) {
     return NextResponse.json(
       { error: err.message },
@@ -33,10 +33,10 @@ export async function DELETE(request) {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
 
-    const deletedTodo = await Todo.findByIdAndDelete(id);
+    const deletedUser = await User.findByIdAndDelete(id);
 
     return NextResponse.json(
-      { message: "Todo deleted successfully", deletedTodo },
+      { message: "User deleted successfully", deletedUser },
       { status: 200 }
     );
   } catch (err) {
@@ -51,16 +51,16 @@ export async function PUT(request) {
     const id = searchParams.get("id");
 
     const body = await request.json();
-    const { title, author } = body;
+    const { title, name } = body;
 
-    const updatedTodo = await Todo.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
       id,
-      { title, author },
+      { title, name },
       { new: true }
     );
 
     return NextResponse.json(
-      { message: "Todo updated successfully", updatedTodo },
+      { message: "User updated successfully", updatedUser },
       { status: 200 }
     );
   } catch (err) {

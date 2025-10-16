@@ -2,16 +2,17 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
-function TodoCard({ todo }) {
+function UserCard({ user }) {
   const router = useRouter();
   const [isEditing, setisEditing] = useState(false);
   const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
+  const [name, setName] = useState("");
 
   async function handleDelete() {
     try {
-      const res = await fetch(`/api/todos?id=${todo._id}`, {
+      const res = await fetch(`/api/users?id=${user._id}`, {
         method: "DELETE",
       });
 
@@ -23,14 +24,14 @@ function TodoCard({ todo }) {
 
   async function handleUpdate() {
     try {
-      const res = await fetch(`/api/todos?id=${todo._id}`, {
+      const res = await fetch(`/api/users?id=${user._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          name,
           title,
-          author,
         }),
       });
 
@@ -50,13 +51,31 @@ function TodoCard({ todo }) {
   }
   if (isEditing) {
     return (
-      <div className="flex flex-col items-center  bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-        <div className="mb-5">
+      <div className="flex flex-col items-center gap-4 py-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+        <div className="">
+          <label
+            htmlFor="name"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            New Name
+          </label>
+          <input
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+            value={name}
+            name="name"
+            id="name"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            required
+          />
+        </div>
+        <div className="">
           <label
             htmlFor="title"
             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
-            New Title
+            New Job Title
           </label>
           <input
             onChange={(e) => {
@@ -70,34 +89,17 @@ function TodoCard({ todo }) {
             required
           />
         </div>
-        <div className="mb-5">
-          <label
-            htmlFor="author"
-            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-          >
-            New Name
-          </label>
-          <input
-            onChange={(e) => {
-              setAuthor(e.target.value);
-            }}
-            value={author}
-            name="author"
-            id="author"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            required
-          />
-        </div>
-        <div className="mb-5 flex gap-4">
+
+        <div className=" flex gap-4">
           <button
             onClick={handleUpdate}
-            className="mb-5 cursor-pointer bg-cyan-700 text-white px-3 py-1 rounded-2xl"
+            className=" cursor-pointer bg-cyan-700 text-white px-3 py-1 rounded-2xl"
           >
             Update
           </button>
           <button
             onClick={handleBack}
-            className="mb-5 cursor-pointer bg-cyan-700 text-white px-3 py-1 rounded-2xl"
+            className=" cursor-pointer bg-cyan-700 text-white px-3 py-1 rounded-2xl"
           >
             Back
           </button>
@@ -106,33 +108,40 @@ function TodoCard({ todo }) {
     );
   } else {
     return (
-      <div className="flex flex-col items-center  bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-        <div className="p-5">
-          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Task : {todo.title}
+      <div className="flex flex-col py-4 items-center gap-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+        <div className="">
+          <h5 className=" text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            Name : <span className="text-cyan-700">{user.name}</span>
           </h5>
         </div>
-        <div className="p-5">
-          <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Author : <span className="text-cyan-700">{todo.author}</span>
+        <div className="">
+          <h5 className=" text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            Job Title : {user.title}
           </h5>
         </div>
-        <div className="mb-5 flex gap-4">
+        <Image
+          src={user.imageUrl}
+          alt={user.name}
+          width={128}
+          height={128}
+          className="rounded-full object-cover"
+        />
+        <div className=" flex gap-4">
           <button
             onClick={handleDelete}
-            className="mb-5 cursor-pointer bg-cyan-700 text-white px-3 py-1 rounded-2xl"
+            className=" cursor-pointer bg-cyan-700 text-white px-3 py-1 rounded-2xl"
           >
             Delete
           </button>
           <button
             onClick={handleEdit}
-            className="mb-5 cursor-pointer bg-cyan-700 text-white px-3 py-1 rounded-2xl"
+            className=" cursor-pointer bg-cyan-700 text-white px-3 py-1 rounded-2xl"
           >
             Edit
           </button>
           <Link
-            href={`/todos/${todo._id}`}
-            className="mb-5 cursor-pointer bg-cyan-700 text-white px-3 py-1 rounded-2xl"
+            href={`/users/${user._id}`}
+            className=" cursor-pointer bg-cyan-700 text-white px-3 py-1 rounded-2xl"
           >
             see details
           </Link>
@@ -142,4 +151,4 @@ function TodoCard({ todo }) {
   }
 }
 
-export default TodoCard;
+export default UserCard;

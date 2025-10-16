@@ -6,7 +6,7 @@ import React from "react";
 function Navbar() {
   const links = [
     { title: "Home", to: "/" },
-    { title: "Todos", to: "/todos" },
+    { title: "Users", to: "/users" },
     { title: "Add", to: "/add" },
     { title: "Contact", to: "/contact" },
   ];
