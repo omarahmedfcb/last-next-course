@@ -8,7 +8,7 @@ function Navbar() {
     { title: "Home", to: "/" },
     { title: "Users", to: "/users" },
     { title: "Add", to: "/add" },
-    { title: "Contact", to: "/contact" },
+    { title: "Products", to: "/products" },
   ];
   const path = usePathname();
   return (
